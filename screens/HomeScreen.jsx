@@ -117,20 +117,20 @@ export default function HomeScreen({ route, navigation }) {
         <FlatList
           ref={flatListRef}
           data={data}
-          renderItem={({ item }) => <RenderItem item={item} />}
+          renderItem={({ item }) => <RenderItem getAllTasksRefresh={getAllTasksRefresh} item={item} />}
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={() => (
             <View style={styles.taskSeparator}></View>
           )}
-          refreshing={isRefreshing}
-          onRefresh={handleRefresh}
-          onEndReached={handleEnd}
-          onEndReachedThreshold={0}
-          ListFooterComponent={() =>
-            !isAtEndOfScrolling && (
-              <ActivityIndicator size="large" color="gray" />
-            )
-          }
+           refreshing={isRefreshing}
+           onRefresh={handleRefresh}
+          // onEndReached={handleEnd}
+          // onEndReachedThreshold={0}
+          // ListFooterComponent={() =>
+          //   !isAtEndOfScrolling && (
+          //     <ActivityIndicator size="large" color="gray" />
+          //   )
+          // }
         />
       ) : (
         <Text style={{fontWeight: 'bold', fontSize: 20, margin:20}}>No tienes tareas asignadas, ve y sé feliz</Text>
@@ -158,14 +158,14 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e5e7eb",
   },
   floatingButton: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "orange",
     position: "absolute",
-    bottom: 20,
-    right: 12,
+    bottom: 5,
+    left:'45%',
   },
 });

@@ -125,7 +125,7 @@ export default function App() {
             screenOptions={{ headerShown: true }}
           >
             <Drawer.Screen name="Tasks" component={HomeStackNavigator} />
-            <Drawer.Screen name="Settings" component={SettingsScreen} />
+            <Drawer.Screen name="Logout" component={SettingsScreen} />
           </Drawer.Navigator>
         </NavigationContainer>
       ) : (

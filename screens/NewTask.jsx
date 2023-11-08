@@ -11,20 +11,26 @@ import {
 import { AuthContext } from "../context/AuthProvider";
 import { TextInput, Button } from "react-native-paper";
 import axiosConfig from "../helpers/axiosConfig";
-
+import { Chip} from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function NewTask({ navigation }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-
+  const [expirationDate, setExpirationDate] = useState(new Date());
+ 
   const [userExecute, setUserExecute] = useState(null);
   const [selectedExecute, setSelectedExecute] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(AuthContext);
   const [isLoadingButton, setIsLoadingButton] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const showDatepicker = () => {
+    setShowDatePicker(true);
+  };
 
   useEffect(() => {
     getExecute();
@@ -40,14 +46,14 @@ export default function NewTask({ navigation }) {
     const task = {
       title,
       description,
-      expiration_date: expirationDate,
+      expiration_date: expirationDate.toISOString().split("T")[0],
       user_execute_id: idExecute,
     };
 
     axiosConfig
       .post(`/tasks`, task)
       .then((response) => {
-        Alert.alert(response.data.msg);
+        Alert.alert("Tarea agregada con exito");
         navigation.navigate("Home1", {
           newTaskAdded: response.data,
         });
@@ -95,15 +101,26 @@ export default function NewTask({ navigation }) {
             value={description}
             onChangeText={(text) => setDescription(text)}
           />
-
-          <TextInput
-            style={styles.input}
-            onChangeText={setExpirationDate}
-            value={expirationDate}
-            placeholder="Dia de vencimiento"
-            placeholderTextColor="gray"
-          />
-
+          <TouchableOpacity onPress={showDatepicker}>
+            <Text style={{marginTop:20}}>Seleccionar el día de vencimiento de la tarea</Text>
+             <Chip icon="calendar" style={{backgroundColor:'#cccccc', marginTop:20}} selectedColor="white">
+                  {expirationDate.toISOString().split("T")[0]}
+            </Chip>
+          </TouchableOpacity>
+         
+          {showDatePicker && (
+            <DateTimePicker
+              display={Platform.OS === "ios" ? "spinner" : "default"}
+              onChange={(event, date) => {
+                setShowDatePicker(false);
+                if (event.type === "set") {
+                  setExpirationDate(date);
+                }
+                setShowDatePicker(false);
+              }}
+              value={expirationDate}
+            />
+          )}
           <Text style={{ marginTop: 20 }}>
             Asignar una persona que ejecutará la tarea
           </Text>
